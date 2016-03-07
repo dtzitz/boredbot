@@ -22,10 +22,14 @@ def TampaScrape():
 
     postContent.write('# Bored?\n')
     postContent.write('Here\'s some things to do today\n\n')
-    for i in range(len(thingNames)):
-        eventName = str('##'+thingNames[i].text.strip('\n'))
-        eventLink = '[tampabay.com]'+'(http://www.tampabay.com'+str(thingLinks[i].get('href'))+')'
+
+    for item in thingNames:
+        eventName = str('##'+item.text.strip('\n'))
+        eventLink = '[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')'
         postContent.write(eventName+' at '+eventLink+'\n')
+
+
+
 
 
     postContent.close()
