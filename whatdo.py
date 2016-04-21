@@ -2,7 +2,7 @@
 
 import requests
 import bs4
-import praw
+# import praw
 from listClean import removeGarbage
 
 
@@ -22,12 +22,21 @@ def TampaScrape():
 
     postContent.write('# Bored?\n')
     postContent.write('Here\'s some things to do today\n\n')
-
+    eventName = []
+    eventLink = []
     for item in thingNames:
-        eventName = str('##'+item.text.strip('\n'))
-        eventLink = '[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')'
-        postContent.write(eventName+' at '+eventLink+'\n')
+        eventName.append( str('##'+item.text.strip('\n')) )
+        # postContent.write(eventName+' at ''\n')
 
+    for item in thingLinks:
+        eventLink.append( '[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')')
+        # postContent.write(eventLink)
+
+    for i in range(len(eventName)):
+        print(eventName[i])
+        print(eventLink[i])
+        postContent.write(eventName[i]+' at ''\n')
+        postContent.write(eventLink[i])
 
 
 
@@ -48,7 +57,6 @@ def TampaScrape():
     for item in clNames:
 
         eventName = str('## '+item.text.strip())
-        print(repr(eventName))
         eventLink = str('[ClTampa]'+'('+item.get('href').strip('\n')+')')
         postContent.write(eventName+' at '+ eventLink +'\n')
 
