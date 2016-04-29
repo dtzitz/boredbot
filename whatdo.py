@@ -6,8 +6,6 @@ import bs4
 from listClean import removeGarbage
 
 
-
-
 def TampaScrape():
 
     postContent = open('redditPost.txt', 'w')
@@ -25,13 +23,22 @@ def TampaScrape():
     postContent.write('Here\'s some things to do today\n\n')
     eventName = []
     eventLink = []
+
+    '''
     for item in thingNames:
         eventName.append( str('##'+item.text.strip('\n')) )
         # postContent.write(eventName+' at ''\n')
+    '''
 
+    eventName = [str('##'+item.text.strip('\n')) for item in thingNames]
+
+    '''
     for item in thingLinks:
         eventLink.append( '[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')')
         # postContent.write(eventLink)
+    '''
+
+    eventLink = ['[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')' for item in thingLinks]
 
     for i in range(len(eventName)):
         print(eventName[i])
