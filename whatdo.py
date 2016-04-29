@@ -2,6 +2,8 @@
 # Mike's test
 import requests
 import bs4
+import sys
+
 # import praw
 from listClean import removeGarbage
 
@@ -20,39 +22,29 @@ def TampaScrape():
     thingLinks = tampaSoup.select('#TTD_CALENDAR_UNIT1 h3 a')
 
     postContent.write('# Bored?\n')
-    postContent.write('Here\'s some things to do today\n\n')
-    eventName = []
-    eventLink = []
+    postContent.write("Here are some things to do today\n\n")
 
-    '''
-    for item in thingNames:
-        eventName.append( str('##'+item.text.strip('\n')) )
-        # postContent.write(eventName+' at ''\n')
-    '''
-
-    eventName = [str('##'+item.text.strip('\n')) for item in thingNames]
-
-    '''
-    for item in thingLinks:
-        eventLink.append( '[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')')
-        # postContent.write(eventLink)
-    '''
-
+    # added space after ## but it might break reddit api
+    eventName = [str('## '+item.text.strip('\n')) for item in thingNames]
     eventLink = ['[tampabay.com]'+'(http://www.tampabay.com'+str(item.get('href'))+')' for item in thingLinks]
 
     for i in range(len(eventName)):
-        print(eventName[i])
-        print(eventLink[i])
+        if sys.version_info[0] == 2:
+            print
+            print "Event Name ", i, " = ", eventName[i]
+            print "Event Link ", i, "= ", eventLink[i]
+        else:
+            print (eventName[i])
+            print (eventLink[i])
+
         postContent.write(eventName[i]+' at ''\n')
-        postContent.write(eventLink[i])
-
-
-
+        # added a couple returns but not sure what that will do in Reddit
+        postContent.write(eventLink[i] + '\n\n')
 
     postContent.close()
 
     # Get content from creative loafing
-    clThings = requests.get('http://cltampa.com/tampa/EventSearch?feature=CL%20Recommends&narrowByDate=This%20Weekend')
+    clThings = requests.get('http://legacy.cltampa.com/tampa/EventSearch?feature=CL%20Recommends&narrowByDate=This%20Weekend')
     creative_success = True
     try:
         clThings.raise_for_status()
@@ -63,7 +55,7 @@ def TampaScrape():
         print "##### HANDLED EXCEPTION #####"
         print "cltampa.com error = ", e
 
-
+    # Only have cl content to process if request succeeded
     if creative_success:
         clSoup = bs4.BeautifulSoup(clThings.text)
 
@@ -81,10 +73,6 @@ def TampaScrape():
 
         postContent.write('This post was automated by /u/dtzitz')
         postContent.close()
-
-
-
-
 
 
     # user_agent = "Weekend Warrior"
