@@ -9,6 +9,7 @@ from listClean import removeGarbage
 
 
 def TampaScrape():
+
     postContent = open('redditPost.txt', 'w')
     print('now do the tampa scrape')
 
@@ -45,23 +46,34 @@ def TampaScrape():
 
     # Get content from creative loafing
     clThings = requests.get('http://cltampa.com/tampa/EventSearch?feature=CL%20Recommends&narrowByDate=This%20Weekend')
-    clThings.raise_for_status()
-    clSoup = bs4.BeautifulSoup(clThings.text)
+    creative_success = True
+    try:
+        clThings.raise_for_status()
+        print "Tried"
+    except requests.exceptions.HTTPError as e:
+        creative_success = False
+        print
+        print "##### HANDLED EXCEPTION #####"
+        print "cltampa.com error = ", e
 
-    clNames = clSoup.select('.listing h3 a')
-    removeGarbage(clNames)
 
-    postContent = open('redditPost.txt', 'a')
-    postContent.write('\n\n\n')
-    postContent.write('Here\'s some stuff to do this weekend\n\n')
-    for item in clNames:
+    if creative_success:
+        clSoup = bs4.BeautifulSoup(clThings.text)
 
-        eventName = str('## '+item.text.strip())
-        eventLink = str('[ClTampa]'+'('+item.get('href').strip('\n')+')')
-        postContent.write(eventName+' at '+ eventLink +'\n')
+        clNames = clSoup.select('.listing h3 a')
+        removeGarbage(clNames)
 
-    postContent.write('This post was automated by /u/dtzitz')
-    postContent.close()
+        postContent = open('redditPost.txt', 'a')
+        postContent.write('\n\n\n')
+        postContent.write('Here\'s some stuff to do this weekend\n\n')
+        for item in clNames:
+
+            eventName = str('## '+item.text.strip())
+            eventLink = str('[ClTampa]'+'('+item.get('href').strip('\n')+')')
+            postContent.write(eventName+' at '+ eventLink +'\n')
+
+        postContent.write('This post was automated by /u/dtzitz')
+        postContent.close()
 
 
 
