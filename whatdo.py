@@ -33,10 +33,8 @@ def TampaScrape():
         # postContent.write(eventLink)
 
     for i in range(len(eventName)):
-        print(eventName[i])
-        print(eventLink[i])
-        postContent.write(eventName[i]+' at ''\n')
-        postContent.write(eventLink[i])
+        postContent.write(eventName[i]+' at ')
+        postContent.write(eventLink[i]+ '\n')
 
 
 
