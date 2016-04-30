@@ -7,7 +7,6 @@ import sys
 # import praw
 from listClean import removeGarbage
 
-
 def TampaScrape():
 
     postContent = open('redditPost.txt', 'w')
